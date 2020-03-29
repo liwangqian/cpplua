@@ -20,10 +20,10 @@ TEST_CASE("Range is construct correctly") {
     CHECK(r.end.column == 0);
     CHECK(r.end.offset == 4);
 
-    r = {{-1U, -1U, -1U}};
-    CHECK(r.start.line   == -1U);
-    CHECK(r.start.column == -1U);
-    CHECK(r.start.offset == -1U);
+    r = {{-1u, -1u, -1u}};
+    CHECK(r.start.line   == -1u);
+    CHECK(r.start.column == -1u);
+    CHECK(r.start.offset == -1u);
 
     CHECK(r.end.line   == 0);
     CHECK(r.end.column == 0);

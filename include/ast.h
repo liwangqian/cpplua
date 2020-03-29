@@ -29,9 +29,9 @@ CPPLUA_NS_BEGIN
 namespace ast {
 
 template<typename NodeType, typename ...Args>
-node_ptr_t make_node(Args... argi)
+node_ptr_t make_node(Args... args)
 {
-    return std::make_shared<NodeType>(argi...);
+    return std::make_shared<NodeType>(args...);
 }
 
 } // namespace ast

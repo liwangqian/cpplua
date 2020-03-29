@@ -25,7 +25,7 @@ public:
         json["expression"] = m_expr;
     }
 
-    callstmt_node(node_ptr_t expr)
+    explicit callstmt_node(node_ptr_t expr)
         : base_node{class_type}, m_expr{std::move(expr)}
     {
     }
@@ -104,7 +104,7 @@ private:
 
 class tablecall_node : public base_node {
 public:
-    static constexpr node_type class_type = expr_string_call;
+    static constexpr node_type class_type = expr_table_call;
 
     const node_ptr_t &arg() const
     {

@@ -11,9 +11,9 @@ CPPLUA_NS_BEGIN
 namespace __detail {
 
 struct position {
-    std::size_t line;   /* 行号 */
-    std::size_t column; /* 列号 */
-    std::size_t offset; /* 与第一个字符的偏移量 */
+    std::uint32_t line{0};   /* 行号 */
+    std::uint32_t column{0}; /* 列号 */
+    std::uint32_t offset{0}; /* 与第一个字符的偏移量 */
 
     inline bool operator==(const position &other)
     {

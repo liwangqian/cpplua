@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include "tools/walker.h"
 
 using namespace cpplua;
 using namespace cpplua::ast;
@@ -122,19 +123,20 @@ TEST_CASE("parse.exception.unexpected.eof") {
 }
 
 TEST_CASE("parser.parse.file") {
-    std::ifstream file{R"(D:\Works\OpenSource\metalua\metalua\grammar\lexer.lua)"};
+    const cpplua::string_t path{R"(D:\Works\OpenSource\metalua\metalua\grammar\lexer.lua)"};
+    std::ifstream file{path};
     std::stringstream is;
     is << file.rdbuf();
     string_t program = is.str();
     parser_t parser{{"5.1"}, program.c_str(), program.size()};
-//    const char *prog = R"(patterns = { --final_short_comment = "^%-%-([^\n]*)()$",
-//})";
-//    parser_t parser{{"5.1"}, prog, strlen(prog)};
     try {
         auto ast = parser.parse();
 //        nlohmann::json json;
 //        ast->to_json(json);
 //        std::cout << json << std::endl;
+        tools::walker_t walker{tools::resolve_file(path), ast};
+        walker.go();
+        const auto &nn = tools::name_resolver_t::instance();
     } catch (error::syntax_error &e) {
         std::cout << e.what() << std::endl;
     }

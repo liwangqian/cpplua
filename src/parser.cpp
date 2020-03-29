@@ -401,7 +401,7 @@ ast_node_t parser::parse_if_stmt()
     auto node = make_node<ifstmt_t>();
     auto &ifstmt = node->cast_to<ifstmt_t>();
 
-    ifstmt.push(finish_node(make_node<ifclause_t>(condition, std::move(body))));
+    ifstmt.add_clause(finish_node(make_node<ifclause_t>(condition, std::move(body))));
     while (consume("elseif")) {
         auto marker = create_location_marker();
         m_locations.push(marker);
@@ -410,7 +410,7 @@ ast_node_t parser::parse_if_stmt()
         create_scope();
         body = parse_block();
         destroy_scope();
-        ifstmt.push(finish_node(make_node<elseifclause_t>(condition, std::move(body))));
+        ifstmt.add_clause(finish_node(make_node<elseifclause_t>(condition, std::move(body))));
     }
 
     if (consume("else")) {
@@ -418,7 +418,7 @@ ast_node_t parser::parse_if_stmt()
         create_scope();
         body = parse_block();
         destroy_scope();
-        ifstmt.push(finish_node(make_node<elseclause_t>(std::move(body))));
+        ifstmt.add_clause(finish_node(make_node<elseclause_t>(std::move(body))));
     }
 
     expect("end");

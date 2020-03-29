@@ -12,6 +12,9 @@ CPPLUA_NS_BEGIN
 
 using string_t = std::string; // shared with same value
 
+using object_id_t = uintptr_t;
+constexpr object_id_t INVALID_OBJECT_ID = 0;
+
 CPPLUA_NS_END
 
 #endif

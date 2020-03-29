@@ -23,12 +23,10 @@ private:
     prototype_t *fmain;
 };
 
-chunk_t new_chunk();
-
 } // namespace __detail
 
 // exports
-using chunk_t = __detail::chunk_t;
+using chunk_t = __detail::chunk;
 
 CPPLUA_NS_END
 

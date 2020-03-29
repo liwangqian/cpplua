@@ -10,15 +10,15 @@ namespace __detail {
 #define BIT(n) (1U << n)
 
 enum feature_bits {
-    lables = BIT(0),
-    empty_statement = BIT(1),
-    hex_escapes = BIT(2),
-    skip_whitespace_escape = BIT(3),
-    strict_escapes = BIT(4),
-    unicode_escapes = BIT(5),
-    bitwise_operators = BIT(6),
-    integer_division = BIT(7),
-    contextual_goto = BIT(8),
+    lables = BIT(0U),
+    empty_statement = BIT(1U),
+    hex_escapes = BIT(2U),
+    skip_whitespace_escape = BIT(3U),
+    strict_escapes = BIT(4U),
+    unicode_escapes = BIT(5U),
+    bitwise_operators = BIT(6U),
+    integer_division = BIT(7U),
+    contextual_goto = BIT(8U),
 };
 
 class feature {

@@ -43,10 +43,10 @@ private:
     void raise(const error::syntax_error &error) const noexcept(false);
 
     const char *m_input;
-    std::size_t m_length;
-    std::size_t m_index;
-    std::size_t m_line;
-    std::size_t m_line_start;
+    uint32_t m_length;
+    uint32_t m_index;
+    uint32_t m_line;
+    uint32_t m_line_start;
     feature_t m_feature;
 };
 

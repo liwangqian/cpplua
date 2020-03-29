@@ -9,7 +9,7 @@ namespace __detail {
 
 inline bool is_whitespace(char c)
 {
-    return c == ' ';
+    return c == ' ' || c == '\t';
 }
 
 inline bool is_eol(char c)

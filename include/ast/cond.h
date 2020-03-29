@@ -14,8 +14,13 @@ class ifstmt_node : public base_node {
 public:
     static constexpr node_type class_type = stmt_if;
 
-    void push(const node_ptr_t &node)
+    void add_clause(const node_ptr_t &node)
     { m_clauses.push_back(node); }
+
+    const std::vector<node_ptr_t>& clauses() const
+    {
+        return m_clauses;
+    }
 
     void to_json(nlohmann::json &json) const override
     {

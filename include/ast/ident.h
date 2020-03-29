@@ -1,6 +1,8 @@
 #ifndef CPPLUA_IDENT_H
 #define CPPLUA_IDENT_H
 
+#include <utility>
+
 #include "base.h"
 
 CPPLUA_NS_BEGIN
@@ -12,7 +14,7 @@ class ident_node : public base_node {
 public:
     static constexpr node_type class_type = stmt_ident;
 
-    const string_t &name()
+    const string_t &name() const
     {
         return m_name;
     }
@@ -23,8 +25,8 @@ public:
         json["name"] = m_name;
     }
 
-    ident_node(const string_t &name)
-        : base_node{class_type}, m_name{name}
+    explicit ident_node(string_t name)
+        : base_node{class_type}, m_name{std::move(name)}
     {
     }
 
