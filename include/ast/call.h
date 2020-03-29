@@ -30,8 +30,6 @@ public:
     {
     }
 
-    ~callstmt_node() = default;
-
 private:
     node_ptr_t m_expr;
 };
@@ -62,17 +60,13 @@ public:
     {
     }
 
-    ~callexpr_node() = default;
-
 private:
     node_ptr_t m_base;
     std::vector<node_ptr_t> m_args;
 };
 
-class stringcall_node : public base_node {
+class singleparam_call_base : public base_node {
 public:
-    static constexpr node_type class_type = expr_string_call;
-
     const node_ptr_t &arg() const
     {
         return m_arg;
@@ -90,49 +84,36 @@ public:
         json["argument"] = m_arg;
     }
 
-    stringcall_node(node_ptr_t base, node_ptr_t arg)
+    singleparam_call_base(node_type class_type, node_ptr_t base, node_ptr_t arg)
         : base_node{class_type}, m_base{std::move(base)}, m_arg{std::move(arg)}
     {
     }
-
-    ~stringcall_node() = default;
 
 private:
     node_ptr_t m_base;
     node_ptr_t m_arg;
 };
 
-class tablecall_node : public base_node {
+class stringcall_node : public singleparam_call_base {
+public:
+    static constexpr node_type class_type = expr_string_call;
+    using supper = singleparam_call_base;
+
+    stringcall_node(node_ptr_t base, node_ptr_t arg)
+        : singleparam_call_base{class_type, std::move(base), std::move(arg)}
+    {
+    }
+};
+
+class tablecall_node : public singleparam_call_base {
 public:
     static constexpr node_type class_type = expr_table_call;
-
-    const node_ptr_t &arg() const
-    {
-        return m_arg;
-    }
-
-    const node_ptr_t &base() const
-    {
-        return m_base;
-    }
-
-    void to_json(nlohmann::json &json) const override
-    {
-        base_node::to_json(json);
-        json["base"] = m_base;
-        json["argument"] = m_arg;
-    }
+    using supper = singleparam_call_base;
 
     tablecall_node(node_ptr_t base, node_ptr_t arg)
-        : base_node{class_type}, m_base{std::move(base)}, m_arg{std::move(arg)}
+        : singleparam_call_base{class_type, std::move(base), std::move(arg)}
     {
     }
-
-    ~tablecall_node() = default;
-
-private:
-    node_ptr_t m_base;
-    node_ptr_t m_arg;
 };
 
 } // namespace __detail

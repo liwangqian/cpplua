@@ -100,11 +100,9 @@ symbol_t *walker_t::walk_node(const ast::node_ptr_t &node)
         case ast::node_type_t::expr_call:
             return parse_expr_call(node);
         case ast::node_type_t::expr_table_call:
-            break;
+            return parse_expr_tablecall(node);
         case ast::node_type_t::expr_string_call:
-            break;
-        case ast::node_type_t::block:
-            break;
+            return parse_expr_stringcall(node);
         case ast::node_type_t::comment:
             break;
         default:
@@ -421,6 +419,7 @@ symbol_t *walker_t::parse_stmt_do(const ast::node_ptr_t &node)
     enter_scope();
     walk_nodes(dostmt.body());
     exit_scope();
+    return nullptr;
 }
 
 symbol_t *walker_t::parse_stmt_while(const ast::node_ptr_t &node)
@@ -451,13 +450,38 @@ symbol_t *walker_t::parse_stmt_assignment(const ast::node_ptr_t &node)
 symbol_t *walker_t::parse_expr_call(const ast::node_ptr_t &node)
 {
     const auto &expr = node->cast_to<ast::callexpr_t>();
+    walk_nodes(expr.args());
     auto fp = walk_node(expr.base());
     assert(fp);
     if (fp->type == symbol_type_t::function) {
         auto ff = dynamic_cast<func_t*>(fp);
         return create_symbol<symbol_group_t>(ff->returns);
     }
-    return nullptr;
+    return fp;
+}
+
+symbol_t *walker_t::parse_expr_tablecall(const ast::node_ptr_t &node)
+{
+    return parse_expr_call_1p(node);
+}
+
+symbol_t *walker_t::parse_expr_stringcall(const ast::node_ptr_t &node)
+{
+    return parse_expr_call_1p(node);
+}
+
+symbol_t *walker_t::parse_expr_call_1p(const ast::node_ptr_t &node)
+{
+    // supper of table_call and string_call is the same.
+    const auto &expr = dynamic_cast<ast::table_call_t::supper&>(*node.get());
+    walk_node(expr.arg());
+    auto fp = walk_node(expr.base());
+    assert(fp);
+    if (fp->type == symbol_type_t::function) {
+        auto ff = dynamic_cast<func_t*>(fp);
+        return create_symbol<symbol_group_t>(ff->returns);
+    }
+    return fp;
 }
 
 } // namespace tools

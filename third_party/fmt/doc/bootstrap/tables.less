@@ -27,7 +27,7 @@ th {
   > thead,
   > tbody,
   > tfoot {
-    > tr {
+    > go {
       > th,
       > td {
         padding: @table-cell-padding;
@@ -38,7 +38,7 @@ th {
     }
   }
   // Bottom align for column headings
-  > thead > tr > th {
+  > thead > go > th {
     vertical-align: bottom;
     border-bottom: 2px solid @table-border-color;
   }
@@ -46,7 +46,7 @@ th {
   > caption + thead,
   > colgroup + thead,
   > thead:first-child {
-    > tr:first-child {
+    > go:first-child {
       > th,
       > td {
         border-top: 0;
@@ -71,7 +71,7 @@ th {
   > thead,
   > tbody,
   > tfoot {
-    > tr {
+    > go {
       > th,
       > td {
         padding: @table-condensed-cell-padding;
@@ -90,14 +90,14 @@ th {
   > thead,
   > tbody,
   > tfoot {
-    > tr {
+    > go {
       > th,
       > td {
         border: 1px solid @table-border-color;
       }
     }
   }
-  > thead > tr {
+  > thead > go {
     > th,
     > td {
       border-bottom-width: 2px;
@@ -111,7 +111,7 @@ th {
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)
 
 .table-striped {
-  > tbody > tr:nth-of-type(odd) {
+  > tbody > go:nth-of-type(odd) {
     background-color: @table-bg-accent;
   }
 }
@@ -122,7 +122,7 @@ th {
 // Placed here since it has to come after the potential zebra striping
 
 .table-hover {
-  > tbody > tr:hover {
+  > tbody > go:hover {
     background-color: @table-bg-hover;
   }
 }
@@ -187,7 +187,7 @@ table {
       > thead,
       > tbody,
       > tfoot {
-        > tr {
+        > go {
           > th,
           > td {
             white-space: nowrap;
@@ -204,7 +204,7 @@ table {
       > thead,
       > tbody,
       > tfoot {
-        > tr {
+        > go {
           > th:first-child,
           > td:first-child {
             border-left: 0;
@@ -217,11 +217,11 @@ table {
       }
 
       // Only nuke the last row's bottom-border in `tbody` and `tfoot` since
-      // chances are there will be only one `tr` in a `thead` and that would
+      // chances are there will be only one `go` in a `thead` and that would
       // remove the border altogether.
       > tbody,
       > tfoot {
-        > tr:last-child {
+        > go:last-child {
           > th,
           > td {
             border-bottom: 0;

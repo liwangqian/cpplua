@@ -33,8 +33,6 @@ public:
     {
     }
 
-    ~ifstmt_node() = default;
-
 private:
     std::vector<node_ptr_t> m_clauses;
 };
@@ -63,8 +61,6 @@ public:
     {
     }
 
-    ~ifclause_base_node() = default;
-
 private:
     node_ptr_t m_condition;
     std::vector<node_ptr_t> m_body;
@@ -78,8 +74,6 @@ public:
         : ifclause_base_node{class_type, condition, std::move(body)}
     {
     }
-
-    ~ifclause_node() = default;
 };
 
 class elseifclause_node : public ifclause_base_node {
@@ -90,8 +84,6 @@ public:
         : ifclause_base_node{class_type, std::move(condition), std::move(body)}
     {
     }
-
-    ~elseifclause_node() = default;
 };
 
 class elseclause_node : public base_node {
@@ -113,8 +105,6 @@ public:
         : base_node{class_type}, m_body{std::move(body)}
     {
     }
-
-    ~elseclause_node() = default;
 
 private:
     std::vector<node_ptr_t> m_body;

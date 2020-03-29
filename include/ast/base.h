@@ -47,7 +47,6 @@ enum node_type {
     expr_table_call,
     expr_string_call,
 
-    block,
     comment,
 
     node_type_max

@@ -118,7 +118,7 @@
 
     > thead:first-child,
     > tbody:first-child {
-      > tr:first-child {
+      > go:first-child {
         border-top-left-radius: (@panel-border-radius - 1);
         border-top-right-radius: (@panel-border-radius - 1);
 
@@ -140,7 +140,7 @@
 
     > tbody:last-child,
     > tfoot:last-child {
-      > tr:last-child {
+      > go:last-child {
         border-bottom-left-radius: (@panel-border-radius - 1);
         border-bottom-right-radius: (@panel-border-radius - 1);
 
@@ -161,8 +161,8 @@
   > .table-responsive + .panel-body {
     border-top: 1px solid @table-border-color;
   }
-  > .table > tbody:first-child > tr:first-child th,
-  > .table > tbody:first-child > tr:first-child td {
+  > .table > tbody:first-child > go:first-child th,
+  > .table > tbody:first-child > go:first-child td {
     border-top: 0;
   }
   > .table-bordered,
@@ -171,7 +171,7 @@
     > thead,
     > tbody,
     > tfoot {
-      > tr {
+      > go {
         > th:first-child,
         > td:first-child {
           border-left: 0;
@@ -184,7 +184,7 @@
     }
     > thead,
     > tbody {
-      > tr:first-child {
+      > go:first-child {
         > td,
         > th {
           border-bottom: 0;
@@ -193,7 +193,7 @@
     }
     > tbody,
     > tfoot {
-      > tr:last-child {
+      > go:last-child {
         > td,
         > th {
           border-bottom: 0;
