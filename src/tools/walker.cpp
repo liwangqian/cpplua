@@ -83,8 +83,6 @@ symbol_t *walker_t::walk_node(const ast::node_ptr_t &node)
             return parse_stmt_literal(node);
         case ast::node_type_t::stmt_table_key:
             break;
-        case ast::node_type_t::stmt_table_key_string:
-            break;
         case ast::node_type_t::stmt_table_value:
             break;
         case ast::node_type_t::expr_table_constructor:
@@ -92,7 +90,7 @@ symbol_t *walker_t::walk_node(const ast::node_ptr_t &node)
         case ast::node_type_t::expr_binary:
             return parse_expr_binary(node);
         case ast::node_type_t::expr_unary:
-            break;
+            return parse_expr_unary(node);
         case ast::node_type_t::expr_member:
             break;
         case ast::node_type_t::expr_index:
@@ -269,6 +267,8 @@ symbol_t *walker_t::parse_table_constructor(const ast::node_ptr_t &node)
             f->location.file = file;
             f->location.range = fn.key()->range;
             ts->fields.push_back(f);
+        } else {
+            walk_node(field);
         }
     }
     exit_scope();
@@ -455,7 +455,6 @@ symbol_t *walker_t::parse_expr_call(const ast::node_ptr_t &node)
     const auto &expr = node->cast_to<ast::callexpr_t>();
     walk_nodes(expr.args());
     auto fp = walk_node(expr.base());
-    assert(fp);
     if (fp->type == symbol_type_t::function) {
         auto ff = dynamic_cast<func_t*>(fp);
         return create_symbol<symbol_group_t>(ff->returns);
@@ -479,12 +478,23 @@ symbol_t *walker_t::parse_expr_call_1p(const ast::node_ptr_t &node)
     const auto &expr = dynamic_cast<ast::table_call_t::supper&>(*node.get());
     walk_node(expr.arg());
     auto fp = walk_node(expr.base());
-    assert(fp);
     if (fp->type == symbol_type_t::function) {
         auto ff = dynamic_cast<func_t*>(fp);
         return create_symbol<symbol_group_t>(ff->returns);
     }
     return fp;
+}
+
+symbol_t *walker_t::parse_expr_unary(const ast::node_ptr_t &node)
+{
+    const auto &expr = node->cast_to<ast::unary_t>();
+    if (expr.op() == "not") {
+        return create_symbol<boolean_t>();
+    }
+    if (expr.op() == "#" || expr.op() == "-") {
+        return create_symbol<number_t>();
+    }
+    return nullptr;
 }
 
 } // namespace tools

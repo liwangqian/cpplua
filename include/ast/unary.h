@@ -12,7 +12,7 @@ class unary_node : public base_node {
 public:
     static constexpr node_type class_type = expr_unary;
 
-    const string_t &op()
+    const string_t &op() const
     {
         return m_op;
     }

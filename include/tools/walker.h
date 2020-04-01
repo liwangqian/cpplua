@@ -53,6 +53,7 @@ private:
     symbol_t *parse_expr_call_1p(const ast::node_ptr_t &node);
     symbol_t *parse_expr_tablecall(const ast::node_ptr_t &node);
     symbol_t *parse_expr_stringcall(const ast::node_ptr_t &node);
+    symbol_t *parse_expr_unary(const ast::node_ptr_t &node);
 };
 
 } // namespace tools
