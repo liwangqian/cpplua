@@ -48,11 +48,11 @@ symbol_t *walker_t::walk_node(const ast::node_ptr_t &node)
 {
     switch (node->type) {
         case ast::node_type_t::stmt_chunk:
-            return walk_chunk(node);
+            return parse_chunk(node);
         case ast::node_type_t::stmt_ident:
             return parse_stmt_ident(node);
         case ast::node_type_t::stmt_local:
-            return walk_stmt_local(node);
+            return parse_stmt_local(node);
         case ast::node_type_t::stmt_return:
             return parse_stmt_return(node);
         case ast::node_type_t::stmt_if:
@@ -88,9 +88,9 @@ symbol_t *walker_t::walk_node(const ast::node_ptr_t &node)
         case ast::node_type_t::stmt_table_value:
             break;
         case ast::node_type_t::expr_table_constructor:
-            return walk_table_constructor(node);
+            return parse_table_constructor(node);
         case ast::node_type_t::expr_binary:
-            break;
+            return parse_expr_binary(node);
         case ast::node_type_t::expr_unary:
             break;
         case ast::node_type_t::expr_member:
@@ -110,7 +110,7 @@ symbol_t *walker_t::walk_node(const ast::node_ptr_t &node)
     }
 }
 
-symbol_t *walker_t::walk_chunk(const ast::node_ptr_t &node)
+symbol_t *walker_t::parse_chunk(const ast::node_ptr_t &node)
 {
     enter_scope();
     const auto &chunk = node->cast_to<ast::chunk_t>();
@@ -153,7 +153,7 @@ symbol_t *walker_t::parse_stmt_literal(const ast::node_ptr_t &node) const
     }
 }
 
-symbol_t *walker_t::walk_stmt_local(const ast::node_ptr_t &node)
+symbol_t *walker_t::parse_stmt_local(const ast::node_ptr_t &node)
 {
     // local name = number | boolean | string | nil | function | table | expr
     const auto &local = node->cast_to<ast::local_t>();
@@ -248,7 +248,7 @@ symbol_t *walker_t::parse_stmt_func(const ast::node_ptr_t &node)
     return fs;
 }
 
-symbol_t *walker_t::walk_table_constructor(const ast::node_ptr_t &node)
+symbol_t *walker_t::parse_table_constructor(const ast::node_ptr_t &node)
 {
     using ast::node_type_t;
     const auto &table = node->cast_to<ast::table_construct_expr_t>();
@@ -275,12 +275,6 @@ symbol_t *walker_t::walk_table_constructor(const ast::node_ptr_t &node)
     return ts;
 }
 
-symbol_t *walker_t::parse_stmt_call(const ast::node_ptr_t &node)
-{
-    const auto &call = node->cast_to<ast::callstmt_t>();
-    return walk_node(call.expression());
-}
-
 symbol_t *walker_t::parse_stmt_ident(const ast::node_ptr_t &node)
 {
     const auto &ident = node->cast_to<ast::ident_t>();
@@ -292,14 +286,23 @@ symbol_t *walker_t::parse_stmt_ident(const ast::node_ptr_t &node)
     return create_symbol<undefined_t>(resolve_name(ident.name()), top);
 }
 
-symbol_t *walker_t::parse_expr_table_ctor(const ast::node_ptr_t &node)
-{
-    return nullptr;
-}
-
 symbol_t *walker_t::parse_expr_binary(const ast::node_ptr_t &node)
 {
-    return nullptr;
+    const auto &expr = node->cast_to<ast::binaryop_t>();
+    if (expr.oper().size() == 1) {
+        switch (expr.oper()[0]) {
+            case '+': case '-': case '*': case '/': case '^': case '%':
+                return create_symbol<number_t>();
+            case '<': case '>':
+                return create_symbol<boolean_t>();
+            default: return nullptr;
+        }
+    }
+    if (expr.oper() == "..") {
+        return create_symbol<str_t>();
+    }
+    // "<=", ">=", "~=", "=="
+    return create_symbol<boolean_t>();
 }
 
 symbol_t *walker_t::create_symbol_from_rvalue(symbol_t *rv, name_t* name, const range_t& r) const

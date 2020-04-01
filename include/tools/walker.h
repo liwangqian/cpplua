@@ -34,14 +34,11 @@ private:
 
     void walk_nodes(const std::vector<ast::node_ptr_t> &nodes);
     symbol_t *walk_node(const ast::node_ptr_t& node);
-    symbol_t *walk_chunk(const ast::node_ptr_t& node);
-    symbol_t *walk_stmt_local(const ast::node_ptr_t& node);
+    symbol_t *parse_chunk(const ast::node_ptr_t& node);
+    symbol_t *parse_stmt_local(const ast::node_ptr_t& node);
     symbol_t *parse_stmt_func(const ast::node_ptr_t& node);
-    symbol_t *walk_table_constructor(const ast::node_ptr_t &node);
-    symbol_t *parse_stmt_call(const ast::node_ptr_t &node);
-    symbol_t *parse_stmt_function(const ast::node_ptr_t &node);
+    symbol_t *parse_table_constructor(const ast::node_ptr_t &node);
     symbol_t *parse_stmt_ident(const ast::node_ptr_t &node);
-    symbol_t *parse_expr_table_ctor(const ast::node_ptr_t &node);
     symbol_t *parse_expr_binary(const ast::node_ptr_t &node);
     symbol_t *parse_stmt_return(const ast::node_ptr_t &node);
     symbol_t *parse_stmt_if(const ast::node_ptr_t &node);
