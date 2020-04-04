@@ -23,21 +23,22 @@ private:
     const ast::node_ptr_t &root;
     env_t *top{nullptr};
     func_t *fsym{nullptr};
-    const name_t* anoynomous{nullptr};
 
     void enter_scope(env_t *env = nullptr);
     void exit_scope();
 
-    symbol_t *parse_stmt_literal(const ast::node_ptr_t &node) const;
-    symbol_t *create_symbol_from_rvalue(symbol_t *rv, name_t* name, const range_t& r) const;
+    symbol_t *create_symbol_from_rvalue(symbol_t *rv, const name_t* name, const range_t& r) const;
     symbol_t *get_symbol_from_list(const std::vector<symbol_t*> &list, std::size_t i);
+    symbol_t *find_parent_by_name(std::vector<name_t *> names);
+    void get_names_from_ident(const ast::node_ptr_t &node, std::vector<name_t *> &names);
 
     void walk_nodes(const std::vector<ast::node_ptr_t> &nodes);
     symbol_t *walk_node(const ast::node_ptr_t& node);
     symbol_t *parse_chunk(const ast::node_ptr_t& node);
+    symbol_t *parse_stmt_literal(const ast::node_ptr_t &node) const;
     symbol_t *parse_stmt_local(const ast::node_ptr_t& node);
     symbol_t *parse_stmt_func(const ast::node_ptr_t& node);
-    symbol_t *parse_table_constructor(const ast::node_ptr_t &node);
+    symbol_t *parse_table_ctor(const ast::node_ptr_t &node);
     symbol_t *parse_stmt_ident(const ast::node_ptr_t &node);
     symbol_t *parse_expr_binary(const ast::node_ptr_t &node);
     symbol_t *parse_stmt_return(const ast::node_ptr_t &node);
@@ -51,9 +52,18 @@ private:
     symbol_t *parse_stmt_assignment(const ast::node_ptr_t &node);
     symbol_t *parse_expr_call(const ast::node_ptr_t &node);
     symbol_t *parse_expr_call_1p(const ast::node_ptr_t &node);
-    symbol_t *parse_expr_tablecall(const ast::node_ptr_t &node);
-    symbol_t *parse_expr_stringcall(const ast::node_ptr_t &node);
+    symbol_t *parse_expr_tcall(const ast::node_ptr_t &node);
+    symbol_t *parse_expr_scall(const ast::node_ptr_t &node);
     symbol_t *parse_expr_unary(const ast::node_ptr_t &node);
+    symbol_t *parse_expr_index(const ast::node_ptr_t &node);
+    symbol_t *parse_stmt_tkey(const ast::node_ptr_t &node);
+    symbol_t *parse_stmt_tval(const ast::node_ptr_t &node);
+    symbol_t *parse_stmt_fori(const ast::node_ptr_t &node);
+    symbol_t *parse_stmt_for(const ast::node_ptr_t &node);
+    symbol_t *parse_stmt_call(const ast::node_ptr_t &node);
+    symbol_t *parse_expr_member(const ast::node_ptr_t &node);
+    symbol_t *parse_expr_assignment(const std::vector<ast::node_ptr_t> &vars,
+        const std::vector<ast::node_ptr_t> &inits, bool is_local);
 };
 
 } // namespace tools

@@ -1,6 +1,8 @@
 #ifndef CPPLUA_MEMBER_H
 #define CPPLUA_MEMBER_H
 
+#include <utility>
+
 #include "base.h"
 
 CPPLUA_NS_BEGIN
@@ -35,12 +37,11 @@ public:
         json["indexer"] = m_indexer;
     }
 
-    member_node(const node_ptr_t &base, const string_t &indexer, const node_ptr_t &ident)
-        : base_node{class_type}, m_base{base}, m_ident{ident}, m_indexer{indexer}
+    member_node(node_ptr_t base, string_t indexer, node_ptr_t ident)
+        : base_node{class_type}, m_base{std::move(base)}
+        , m_ident{std::move(ident)}, m_indexer{std::move(indexer)}
     {
     }
-
-    ~member_node() = default;
 
 private:
     node_ptr_t m_base;

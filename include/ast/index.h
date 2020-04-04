@@ -36,8 +36,6 @@ public:
     {
     }
 
-    ~index_node() = default;
-
 private:
     node_ptr_t m_base;
     node_ptr_t m_indexer;

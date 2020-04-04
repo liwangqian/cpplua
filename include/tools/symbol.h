@@ -41,6 +41,12 @@ struct symbol_t {
     {
     }
 
+    template <typename DerivedPointer>
+    DerivedPointer cast_to_ptr()
+    {
+        return static_cast<DerivedPointer>(this);
+    }
+
     virtual cpplua::string_t to_string() const = 0;
     virtual cpplua::string_t type_string() const = 0;
 
@@ -59,7 +65,15 @@ struct table_t : public symbol_t {
         type = symbol_type_t::table;
     }
 
-    std::vector<symbol_t*> fields;
+    symbol_t *find_field(const name_t *name)
+    {
+        for (const auto s : fields) {
+            if (s->name == name) {
+                return s;
+            }
+        }
+        return nullptr;
+    }
 
     cpplua::string_t to_string() const override
     {
@@ -71,8 +85,17 @@ struct table_t : public symbol_t {
 
     cpplua::string_t type_string() const override
     {
-        return fmt::format("{}\n {}\n{}", '{', fmt::join(fields, ",\n "), '}');
+        if (fields.empty()) {
+            return "{...}";
+        }
+        if (fields.size() > 5) {
+            return fmt::format("{}\n{}\n...\n{}", '{',
+                fmt::join(fields.begin(), fields.begin() + 5, ",\n"), '}');
+        }
+        return fmt::format("{}\n{}\n{}", '{', fmt::join(fields, ",\n"), '}');
     }
+
+    std::vector<symbol_t*> fields;
 };
 
 struct func_t : public symbol_t {
@@ -88,7 +111,10 @@ struct func_t : public symbol_t {
 
     cpplua::string_t to_string() const override
     {
-        return fmt::format("{}: {}", name->value, format());
+        if (name) {
+            return fmt::format("{}: {}", name->value, format());
+        }
+        return type_string();
     }
 
     cpplua::string_t type_string() const override
@@ -284,6 +310,24 @@ struct ref_t : public symbol_t {
         return ref->type_string();
     }
 
+    symbol_type_t ref_type() const
+    {
+        if (ref == nullptr) return symbol_type_t::any;
+        if (ref->type == symbol_type_t::ref) {
+            return ref->cast_to_ptr<ref_t*>()->ref_type();
+        }
+        return ref->type;
+    }
+
+    symbol_t *def()
+    {
+        if (ref == nullptr) return nullptr;
+        if (ref->type == symbol_type_t::ref) {
+            return ref->cast_to_ptr<ref_t*>()->def();
+        }
+        return ref;
+    }
+
     symbol_t *ref{nullptr};
 };
 
@@ -318,6 +362,31 @@ template <typename S, typename ...Args>
 decltype(auto) create_symbol(Args&& ...args)
 {
     return symbol_factory_t::instance().create<S>(args...);
+}
+
+inline bool is_table(symbol_t *s)
+{
+    return s->type == symbol_type_t::table;
+}
+
+inline bool is_function(symbol_t *s)
+{
+    return s->type == symbol_type_t::function;
+}
+
+inline bool is_ref(symbol_t *s)
+{
+    return s->type == symbol_type_t::ref;
+}
+
+inline bool is_multi(symbol_t *s)
+{
+    return s->type == symbol_type_t::multi;
+}
+
+inline bool is_group(symbol_t *s)
+{
+    return s->type == symbol_type_t::group;
 }
 
 } // namespace tools

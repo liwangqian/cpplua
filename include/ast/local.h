@@ -33,8 +33,6 @@ public:
         is_local = true;
     }
 
-    ~local_node() = default;
-
 private:
     std::vector<node_ptr_t> m_variables;
     std::vector<node_ptr_t> m_init;

@@ -45,8 +45,6 @@ public:
     {
     }
 
-    ~fornumeric_node() = default;
-
 private:
     node_ptr_t m_var;
     node_ptr_t m_start;
@@ -80,8 +78,6 @@ public:
         : base_node{class_type}, m_vars{std::move(vars)}, m_iters{std::move(iters)}, m_body{std::move(body)}
     {
     }
-
-    ~forgeneric_node() = default;
 
 private:
     std::vector<node_ptr_t> m_vars;
