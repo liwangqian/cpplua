@@ -2,7 +2,7 @@
 #define CPPLUA_ERROR_H
 
 #include "def.h"
-#include "range.h"
+#include "utils/range.h"
 #include "fmt/format.h"
 
 CPPLUA_NS_BEGIN
@@ -27,6 +27,7 @@ struct syntax_error : public std::exception {
     std::size_t offset;
 
     syntax_error(const syntax_error &) = default;
+    syntax_error &operator=(const syntax_error &) = default;
 
     syntax_error(string_t msg, const position_t &p)
         : message{std::move(msg)}, line{p.line}, column{p.column}, offset{p.offset}

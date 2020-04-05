@@ -1,10 +1,13 @@
-#ifndef CPPLUA_RANGE_H
-#define CPPLUA_RANGE_H
+//
+// Created by busted on 2020/4/5.
+//
+
+#ifndef CPPLUA_POSITION_H
+#define CPPLUA_POSITION_H
 
 #include "def.h"
-#include <array>
-#include "fmt/format.h"
 #include "json.hpp"
+#include "fmt/format.h"
 
 CPPLUA_NS_BEGIN
 
@@ -59,43 +62,23 @@ inline void to_json(nlohmann::json &json, const position &p)
     json["offset"] = p.offset;
 }
 
-struct range {
-    position start;
-    position end;
-
-    inline bool operator==(const range &r) const
-    {
-        return start == r.start && end == r.end;
-    }
-
-    inline bool operator!=(const range &r) const
-    {
-        return start != r.start || end != r.end;
-    }
-
-    inline bool contains(const range &r) const
-    {
-        return start <= r.start && end >= r.end;
-    }
-
-    inline string_t to_string() const
-    {
-        return fmt::format("{} start = {}, end = {} {}", '{', start.to_string(), end.to_string(), '}');
-    }
-};
-
-inline void to_json(nlohmann::json &json, const range &r)
-{
-    json["start"] = r.start;
-    json["end"] = r.end;
-}
-
 } // namespace __detail
 
 // exports
 using position_t = __detail::position;
-using range_t = __detail::range;
 
 CPPLUA_NS_END
 
-#endif
+namespace fmt {
+template<>
+struct formatter<cpplua::position_t>
+    : formatter<string_view> {
+    template<typename FormatContext>
+    auto format(const cpplua::position_t &p, FormatContext &ctx)
+    {
+        return formatter<string_view>::format(p.to_string(), ctx);
+    }
+};
+}
+
+#endif //CPPLUA_POSITION_H

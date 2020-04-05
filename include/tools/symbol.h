@@ -6,7 +6,7 @@
 #define CPPLUA_SYMBOL_H
 
 #include "def.h"
-#include "range.h"
+#include "utils/range.h"
 #include "factory.h"
 #include "names.h"
 #include "files.h"
@@ -17,7 +17,7 @@ namespace tools {
 
 struct location_t {
     const file_t *file{nullptr};
-    range_t range;
+    vrange_t range;
 };
 
 enum class symbol_type_t {

@@ -62,7 +62,7 @@ struct lineinfo_t {
         }
     }
 
-    position_t to_position(uint32_t offset)
+    position_t to_position(uint32_t offset) const
     {
         uint32_t line{0};
         uint32_t column{0};
@@ -78,7 +78,7 @@ struct lineinfo_t {
         return position_t{line, column, offset};
     }
 
-    uint32_t to_offset(position_t pos)
+    uint32_t to_offset(position_t pos) const
     {
         auto chunk_id = pos.line / LINE_COUNT_PER_CHUNK;
         auto slot_id = pos.line % LINE_COUNT_PER_CHUNK;

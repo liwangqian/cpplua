@@ -2,7 +2,7 @@
 #define CPPLUA_H
 
 #include "def.h"
-#include "range.h"
+#include "utils/range.h"
 #include "token.h"
 #include "lexer.h"
 #include "parser.h"

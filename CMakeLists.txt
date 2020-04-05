@@ -25,6 +25,6 @@ add_executable(cpplua
         test/test_vm.cpp
         test/test_symbol.cpp
         test/test_ast_walker.cpp
-        include/tools/document.h test/test_document.cpp include/utils/lineinfo.h include/utils/noncopyable.h)
+        include/tools/document.h test/test_document.cpp include/utils/lineinfo.h include/utils/noncopyable.h include/utils/position.h)
 
 target_link_libraries(cpplua fmt-header-only)

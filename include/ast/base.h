@@ -2,7 +2,7 @@
 #define CPPLUA_BASE_H
 
 #include "def.h"
-#include "range.h"
+#include "utils/range.h"
 #include <memory>
 #include <cassert>
 #include <sstream>
@@ -54,7 +54,7 @@ enum node_type {
 
 struct base_node {
     node_type type;
-    range_t range;
+    vrange_t range;
     bool is_local;
 
     base_node(node_type type)

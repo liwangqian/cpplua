@@ -4,7 +4,7 @@
 #include "def.h"
 #include "token.h"
 #include "ast.h"
-#include "range.h"
+#include "utils/range.h"
 
 CPPLUA_NS_BEGIN
 
@@ -32,7 +32,7 @@ public:
     ~marker() = default;
 
 private:
-    range_t m_range;
+    vrange_t m_range;
 };
 
 } // namespace __detail

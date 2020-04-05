@@ -380,7 +380,7 @@ symbol_t *walker_t::parse_expr_binary(const ast::node_ptr_t &node)
     return create_symbol<boolean_t>();
 }
 
-symbol_t *walker_t::create_symbol_from_rvalue(symbol_t *rv, const name_t* name, const range_t& r) const
+symbol_t *walker_t::create_symbol_from_rvalue(symbol_t *rv, const name_t* name, const vrange_t &r) const
 {
     switch (rv->type) {
         case symbol_type_t::any:

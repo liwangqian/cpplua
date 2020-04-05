@@ -2,7 +2,7 @@
 #define CPPLUA_PROTOTYPE_H
 
 #include "def.h"
-#include "range.h"
+#include "utils/range.h"
 #include "upvalue.h"
 #include "constant.h"
 #include <vector>

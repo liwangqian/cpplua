@@ -1,12 +1,12 @@
 #ifndef CPPLUA_TOKEN_H
 #define CPPLUA_TOKEN_H
 
-#include "def.h"
-#include "range.h"
-#include "keyword.h"
 #include <string>
-#include "fmt/format.h"
 #include <memory>
+#include "def.h"
+#include "keyword.h"
+#include "utils/range.h"
+#include "fmt/format.h"
 
 CPPLUA_NS_BEGIN
 
@@ -43,7 +43,7 @@ public:
     inline const string_t &value() const
     { return m_value; }
 
-    inline const range_t &range() const
+    inline const vrange_t &range() const
     { return m_range; }
 
     inline keyword_t keyword_id() const
@@ -91,13 +91,14 @@ public:
     inline std::string to_string() const
     {
         return fmt::format("{}\n\ttype = {}\n\tvalue = {}\n\trange = {}\n{}",
-            '{', m_type, m_value, m_range.to_string(), '}');
+            '{', m_type, m_value, m_range, '}');
     }
 
     virtual ~token() = default;
+    token() = default;
     token &operator=(const token &) = default;
 
-    inline token(token_type_t type, string_t value, range_t range)
+    inline token(token_type_t type, const string_t& value, vrange_t range)
         : m_type{type}, m_value{value}, m_range{range}
     {
         if (is_keyword()) {
@@ -105,23 +106,19 @@ public:
         }
     }
 
-    inline token(token_type_t type, const char *value, range_t range)
+    inline token(token_type_t type, const char *value, vrange_t range)
         : m_type{type}, m_value{value}, m_range{range}
     {
         if (is_keyword()) {
             m_keyword = get_keyword_t(value);
         }
     }
-
-    token()
-        : m_type{Invalid}
-    {}
 
 private:
-    token_type_t m_type;
+    token_type_t m_type{Invalid};
     string_t m_value;
-    range_t m_range;
-    keyword_t m_keyword;
+    vrange_t m_range{0, 0};
+    keyword_t m_keyword{NOT_A_KW};
 };
 
 } // namespace __detail

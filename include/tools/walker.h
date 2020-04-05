@@ -28,7 +28,7 @@ private:
     void enter_scope(env_t *env = nullptr);
     void exit_scope();
 
-    symbol_t *create_symbol_from_rvalue(symbol_t *rv, const name_t* name, const range_t& r) const;
+    symbol_t *create_symbol_from_rvalue(symbol_t *rv, const name_t* name, const vrange_t &r) const;
     symbol_t *get_symbol_from_list(const std::vector<symbol_t*> &list, std::size_t i);
     symbol_t *find_parent_by_name(std::vector<name_t *> names);
     void get_names_from_ident(const ast::node_ptr_t &node, std::vector<name_t *> &names);

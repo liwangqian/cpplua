@@ -1,6 +1,5 @@
 #include "lexer.h"
 #include "keyword.h"
-#include <unordered_map>
 #include <cassert>
 
 CPPLUA_NS_BEGIN
@@ -34,7 +33,9 @@ inline bool is_hex_digit(char c)
 
 lexer::lexer(feature_t features, const char *input, std::size_t len)
     : m_input{input}, m_length{len}, m_index{0}, m_line{0}, m_line_start{0}, m_feature{features}
-{}
+{
+    new_line(0); // 0是第一行的开始位置
+}
 
 token_t lexer::lex()
 {
@@ -193,9 +194,7 @@ token_t lexer::scan_comment()
     m_index += 2; // --
 
     string_view_t comment;
-    const auto line = m_line;
-    const auto line_start = m_line_start;
-    const auto start_offset = m_index;
+    const auto start_index = m_index;
     const auto c = m_input[m_index];
 
     // 可能是多行注释
@@ -205,17 +204,10 @@ token_t lexer::scan_comment()
             if (is_eol(m_input[m_index])) break;
             ++m_index;
         }
-        comment = {m_input + start_offset, m_index - start_offset};
+        comment = {m_input + start_index, m_index - start_index};
     }
 
-    return {
-        Comment,
-        comment.to_string(),
-        {
-            {line, start_offset - line_start, start_offset},
-            {m_line, m_index - m_line_start, m_index}
-        },
-    };
+    return { Comment, comment.to_string(), {start_index, m_index } };
 }
 
 token_t lexer::scan_ident_or_keyword()
@@ -235,20 +227,12 @@ token_t lexer::scan_ident_or_keyword()
         type = Identifier;
     }
 
-    return {
-        type, value,
-        {
-            {m_line, token_start - m_line_start, token_start},
-            {m_line, m_index - m_line_start, m_index}
-        }
-    };
+    return { type, value, { token_start , m_index} };
 }
 
 token_t lexer::scan_string_literal()
 {
     auto delimiter = m_input[m_index++];
-    auto line = m_line;
-    auto line_start = m_line_start;
     auto string_start = m_index;
     auto token_start = m_index;
 
@@ -268,29 +252,17 @@ token_t lexer::scan_string_literal()
     return {
         StringLiteral,
         string_t(m_input + string_start, m_input + m_index - 1),
-        {
-            {line, token_start - line_start, token_start},
-            {m_line, m_index - m_line_start, m_index}
-        }
+        { token_start, m_index }
     };
 }
 
 token_t lexer::scan_long_string_literal()
 {
-    auto line = m_line;
-    auto line_start = m_line_start;
-    auto index = m_index;
+    auto start_index = m_index;
     auto value = read_long_string(false);
     assert(value.is_valid());
 
-    return {
-        StringLiteral,
-        value.to_string(),
-        {
-            {line, index - line_start, index},
-            {m_line, m_index - m_line_start, m_index}
-        }
-    };
+    return { StringLiteral, value.to_string(), { start_index, m_index } };
 }
 
 token_t lexer::scan_numeric_literal()
@@ -300,41 +272,21 @@ token_t lexer::scan_numeric_literal()
     auto p = m_input[m_index + 1];
     auto value = (c == '0' && (p == 'x' || p == 'X')) ?
                  read_hex_literal() : read_dec_literal();
-    return {
-        NumericLiteral,
-        value.to_string(),
-        {
-            {m_line, token_start - m_line_start, token_start},
-            {m_line, m_index - m_line_start, m_index}
-        }
-    };
+    return { NumericLiteral, value.to_string(), { token_start, m_index } };
 }
 
 token_t lexer::scan_vararg_literal()
 {
     std::size_t token_start = m_index;
     m_index += 3;
-    return {
-        VarargLiteral,
-        "...",
-        {
-            {m_line, token_start - m_line_start, token_start},
-            {m_line, m_index - m_line_start, m_index}
-        }
-    };
+    return { VarargLiteral, "...", { token_start, m_index } };
 }
 
 token_t lexer::scan_punctuator(const char *expr, std::size_t len)
 {
     auto token_start = m_index;
     m_index += len;
-    return {
-        Punctuator, string_t{expr},
-        {
-            {m_line, token_start - m_line_start, token_start},
-            {m_line, m_index - m_line_start, m_index}
-        }
-    };
+    return { Punctuator, expr, { token_start, m_index} };
 }
 
 string_view_t lexer::read_hex_literal()
@@ -441,19 +393,17 @@ void lexer::raise(const error::syntax_error &error) const noexcept(false)
 
 token_t lexer::make_eof() const
 {
-    return {
-        EndOfFile,
-        "eof",
-        {
-            {m_line, m_index - m_line_start, m_index},
-            {m_line, m_index - m_line_start, m_index}
-        }
-    };
+    return { EndOfFile, "eof", { m_index, m_index } };
 }
 
 void lexer::new_line(uint32_t offset)
 {
     m_lineinfo.new_line(offset);
+}
+
+const lineinfo_t &lexer::lineinfo() const
+{
+    return m_lineinfo;
 }
 
 } // namespace __detail

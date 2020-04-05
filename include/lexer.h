@@ -20,6 +20,7 @@ public:
     lexer(feature_t features, const char *input, std::size_t len);
 
     token_t lex();
+    const lineinfo_t &lineinfo() const;
 
 private:
     void skip_space();
@@ -56,7 +57,7 @@ private:
 
 inline position_t lexer::curr_position() const
 {
-    return cpplua::position_t{m_line, m_index - m_line_start, m_index};
+    return m_lineinfo.to_position(m_index);
 }
 
 } // namespace __detail

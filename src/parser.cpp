@@ -36,7 +36,8 @@ void parser::expect(const char *value)
     if (m_token.value() == value) {
         next();
     } else {
-        raise(error::expected{m_token.range().start, value, m_token.value()});
+        auto pos = m_lexer.lineinfo().to_position(m_token.range().start);
+        raise(error::expected{pos, value, m_token.value()});
     }
 }
 
@@ -607,7 +608,8 @@ ast_node_t parser::parse_function_decl(const ast_node_t &name, bool is_local)
                 expect(")");
                 break;
             } else {
-                raise(error::unexpected_token{m_token.range().start, "<name> or '...'", m_token.value()});
+                auto pos = m_lexer.lineinfo().to_position(m_token.range().start);
+                raise(error::unexpected_token{pos, "<name> or '...'", m_token.value()});
             }
         }
     }
@@ -711,6 +713,7 @@ void parser::validate_var(const ast_node_t &var) const
 ast_node_t parser::unexpected(const token_t &tok) const
 {
     const auto &near_ = m_lookahead.value();
+    auto pos = m_lexer.lineinfo().to_position(tok.range().start);
     if (tok.type() != Invalid) {
         const char *type = "";
         switch (tok.type()) {
@@ -733,16 +736,17 @@ ast_node_t parser::unexpected(const token_t &tok) const
                 type = "boolean";
                 break;
             case NilLiteral:
-                return raise(error::unexpected{tok.range().start, "symbol", "nil", near_});
+                return raise(error::unexpected{pos, "symbol", "nil", near_});
         }
-        return raise(error::unexpected{tok.range().start, type, tok.value(), near_});
+        return raise(error::unexpected{pos, type, tok.value(), near_});
     }
-    return raise(error::unexpected{tok.range().start, "symbol", tok.value(), near_});
+    return raise(error::unexpected{pos, "symbol", tok.value(), near_});
 }
 
 ast_node_t parser::raise_unexpected_token(const string_t &desc, const token_t &tok) const
 {
-    return raise(error::unexpected_token{m_token.range().start, desc, tok.value()});
+    auto pos = m_lexer.lineinfo().to_position(m_token.range().start);
+    return raise(error::unexpected_token{pos, desc, tok.value()});
 }
 
 ast_node_t parser::raise(const error::syntax_error &error) const noexcept(false)
