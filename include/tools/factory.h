@@ -5,7 +5,7 @@
 #ifndef CPPLUA_FACTORY_H
 #define CPPLUA_FACTORY_H
 
-#include "singleton.h"
+#include "utils/singleton.h"
 #include <unordered_map>
 #include <forward_list>
 #include <algorithm>

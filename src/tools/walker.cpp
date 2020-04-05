@@ -30,6 +30,7 @@ void walker_t::exit_scope()
 {
     string_t spaces(top->depth() * 2, ' ');
     top->foreach([&spaces](symbol_t *s) {
+//        std::cout << s->location.range.to_string();
         std::cout << spaces << s->to_string() << std::endl;
     });
     std::cout << "---------" << std::endl;
@@ -661,6 +662,7 @@ symbol_t *walker_t::parse_expr_member(const ast::node_ptr_t &node)
 
 symbol_t *walker_t::find_parent_by_name(std::vector<name_t*> names)
 {
+    if (names.empty()) return nullptr;
     auto s = top->get(names[0]->value);
     auto it = names.begin();
     while (s && (++it != names.end())) {
@@ -674,7 +676,7 @@ symbol_t *walker_t::find_parent_by_name(std::vector<name_t*> names)
             if (!def || !is_table(def)) {
                 break;
             }
-            auto t = s->cast_to_ptr<table_t*>();
+            auto t = def->cast_to_ptr<table_t*>();
             s = t->find_field(*it);
             continue;
         }

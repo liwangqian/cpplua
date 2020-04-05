@@ -155,6 +155,7 @@ char lexer::get()
         if (c == '\n' && p == '\r') ++m_index;
         ++m_line;
         m_line_start = ++m_index;
+        new_line(m_index);
     } else {
         ++m_index;
     }
@@ -181,6 +182,7 @@ bool lexer::skip_eol()
         if (c == '\n' && p == '\r') ++m_index;
         ++m_line;
         m_line_start = ++m_index;
+        new_line(m_index);
         return true;
     }
     return false;
@@ -447,6 +449,11 @@ token_t lexer::make_eof() const
             {m_line, m_index - m_line_start, m_index}
         }
     };
+}
+
+void lexer::new_line(uint32_t offset)
+{
+    m_lineinfo.new_line(offset);
 }
 
 } // namespace __detail

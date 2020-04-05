@@ -134,9 +134,12 @@ TEST_CASE("parser.parse.file") {
 //        nlohmann::json json;
 //        ast->to_json(json);
 //        std::cout << json << std::endl;
+        std::cout << std::numeric_limits<uint32_t>::max() << std::endl;
         tools::walker_t walker{tools::resolve_file(path), ast};
         walker.go();
         const auto &nn = tools::name_resolver_t::instance();
+        std::cout << "names: " << nn.object_count() << std::endl;
+        std::cout << "symbols: " << tools::symbol_factory_t::instance().count() << std::endl;
     } catch (error::syntax_error &e) {
         std::cout << e.what() << std::endl;
     }

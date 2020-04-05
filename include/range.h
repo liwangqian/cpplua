@@ -15,32 +15,32 @@ struct position {
     std::uint32_t column{0}; /* 列号 */
     std::uint32_t offset{0}; /* 与第一个字符的偏移量 */
 
-    inline bool operator==(const position &other)
+    inline bool operator==(const position &other) const
     {
         return line == other.line && column == other.column && offset == other.offset;
     }
 
-    inline bool operator!=(const position &other)
+    inline bool operator!=(const position &other) const
     {
         return !this->operator==(other);
     }
 
-    inline bool operator<(const position &other)
+    inline bool operator<(const position &other) const
     {
         return offset < other.offset;
     }
 
-    inline bool operator>(const position &other)
+    inline bool operator>(const position &other) const
     {
         return offset > other.offset;
     }
 
-    inline bool operator<=(const position &other)
+    inline bool operator<=(const position &other) const
     {
         return offset <= other.offset;
     }
 
-    inline bool operator>=(const position &other)
+    inline bool operator>=(const position &other) const
     {
         return offset >= other.offset;
     }
@@ -63,17 +63,17 @@ struct range {
     position start;
     position end;
 
-    inline bool operator==(const range &r)
+    inline bool operator==(const range &r) const
     {
         return start == r.start && end == r.end;
     }
 
-    inline bool operator!=(const range &r)
+    inline bool operator!=(const range &r) const
     {
         return start != r.start || end != r.end;
     }
 
-    inline bool contains(const range &r)
+    inline bool contains(const range &r) const
     {
         return start <= r.start && end >= r.end;
     }

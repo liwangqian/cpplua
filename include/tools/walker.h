@@ -9,6 +9,7 @@
 #include "ast.h"
 #include "env.h"
 #include "symbol.h"
+#include "document.h"
 
 CPPLUA_NS_BEGIN
 namespace tools {

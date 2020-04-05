@@ -5,7 +5,7 @@
 #ifndef CPPLUA_RESOLVER_H
 #define CPPLUA_RESOLVER_H
 
-#include "singleton.h"
+#include "utils/singleton.h"
 #include <unordered_map>
 
 CPPLUA_NS_BEGIN
@@ -41,6 +41,11 @@ struct resolver_t : singleton_t<resolver_t<Key, Value>> {
             repository[key] = val;
             return val;
         }
+    }
+
+    std::size_t object_count() const
+    {
+        return repository.size();
     }
 
     ~resolver_t()

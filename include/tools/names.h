@@ -6,7 +6,7 @@
 #define CPPLUA_NAMES_H
 
 #include "def.h"
-#include "singleton.h"
+#include "utils/singleton.h"
 #include "resolver.h"
 
 CPPLUA_NS_BEGIN

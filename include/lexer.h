@@ -3,25 +3,28 @@
 
 #include "def.h"
 #include "token.h"
-#include "string_view.h"
-#include "feature.h"
 #include "error.h"
+#include "feature.h"
+#include "utils/noncopyable.h"
+#include "utils/string_view.h"
+#include "utils/lineinfo.h"
 
 CPPLUA_NS_BEGIN
 
 namespace __detail {
 
-class lexer {
+class lexer : public noncopyable_t {
 public:
-    lexer(feature_t features, const char *input, std::size_t len);
-    lexer() = delete;
     ~lexer() = default;
+    lexer() = delete;
+    lexer(feature_t features, const char *input, std::size_t len);
 
     token_t lex();
 
 private:
     void skip_space();
     bool skip_eol();
+    void new_line(uint32_t offset);
 
     char get();
 
@@ -48,6 +51,7 @@ private:
     uint32_t m_line;
     uint32_t m_line_start;
     feature_t m_feature;
+    lineinfo_t m_lineinfo;
 };
 
 inline position_t lexer::curr_position() const
