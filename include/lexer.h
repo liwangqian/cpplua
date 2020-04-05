@@ -49,8 +49,6 @@ private:
     const char *m_input;
     uint32_t m_length;
     uint32_t m_index;
-    uint32_t m_line;
-    uint32_t m_line_start;
     feature_t m_feature;
     lineinfo_t m_lineinfo;
 };

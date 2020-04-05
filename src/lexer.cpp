@@ -32,7 +32,7 @@ inline bool is_hex_digit(char c)
 }
 
 lexer::lexer(feature_t features, const char *input, std::size_t len)
-    : m_input{input}, m_length{len}, m_index{0}, m_line{0}, m_line_start{0}, m_feature{features}
+    : m_input{input}, m_length{len}, m_index{0}, m_feature{features}
 {
     new_line(0); // 0是第一行的开始位置
 }
@@ -154,9 +154,7 @@ char lexer::get()
     if (is_eol(c)) {
         if (c == '\r' && p == '\n') ++m_index;
         if (c == '\n' && p == '\r') ++m_index;
-        ++m_line;
-        m_line_start = ++m_index;
-        new_line(m_index);
+        new_line(++m_index);
     } else {
         ++m_index;
     }
@@ -181,9 +179,7 @@ bool lexer::skip_eol()
     if (is_eol(c)) {
         if (c == '\r' && p == '\n') ++m_index;
         if (c == '\n' && p == '\r') ++m_index;
-        ++m_line;
-        m_line_start = ++m_index;
-        new_line(m_index);
+        new_line(++m_index);
         return true;
     }
     return false;
@@ -243,9 +239,8 @@ token_t lexer::scan_string_literal()
             get(); // TODO
         }
         if (m_index >= m_length || is_eol(c)) {
-            raise(error::unfinished_string{
-                {m_line, m_index - m_line_start, m_index},
-                {m_input + string_start, m_input + m_index}});
+            auto s = string_t{m_input + string_start, m_input + m_index};
+            raise(error::unfinished_string{ curr_position(), s});
         }
     }
 
