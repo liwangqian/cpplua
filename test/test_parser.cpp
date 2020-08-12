@@ -12,7 +12,7 @@ using namespace cpplua::ast;
 TEST_CASE("parse.node.skip_comment") {
     const char *program = "-- hello lua";
 
-    parser_t parser{{"5.1"}, program, strlen(program)};
+    parser_t parser{{"5.1"}, program, (uint32_t)strlen(program)};
     auto ast = parser.parse();
     CHECK(ast != nullptr);
     CHECK(ast->is_type(node_type_t::stmt_chunk));
@@ -21,7 +21,7 @@ TEST_CASE("parse.node.skip_comment") {
 TEST_CASE("parse.node.local.var") {
     const char *program = "local x = 1";
 
-    parser_t parser{{"5.1"}, program, strlen(program)};
+    parser_t parser{{"5.1"}, program, (uint32_t)strlen(program)};
     auto ast = parser.parse();
     CHECK(ast != nullptr);
     CHECK(ast->is_type(node_type_t::stmt_chunk));
@@ -40,7 +40,7 @@ TEST_CASE("parse.node.local.var") {
 
 TEST_CASE("parser.node.local.table") {
     const char *program = "local table = { 1, 2, 3, ['x'] = true, name = 'kitty'}";
-    parser_t parser{{"5.1"}, program, strlen(program)};
+    parser_t parser{{"5.1"}, program, (uint32_t)strlen(program)};
     auto ast = parser.parse();
     CHECK(ast != nullptr);
     CHECK(ast->is_type(node_type_t::stmt_chunk));
@@ -75,7 +75,7 @@ TEST_CASE("parser.node.local.table") {
 TEST_CASE("parse.node.local.function") {
     const char *program = "local function hello(world) end";
 
-    parser_t parser{{"5.1"}, program, strlen(program)};
+    parser_t parser{{"5.1"}, program, (uint32_t)strlen(program)};
     auto ast = parser.parse();
     CHECK(ast != nullptr);
     CHECK(ast->is_type(node_type_t::stmt_chunk));
@@ -93,7 +93,7 @@ TEST_CASE("parse.node.local.function") {
 TEST_CASE("parse.node.local.assignment") {
     const char *program = "local x; x = 1";
 
-    parser_t parser{{"5.1"}, program, strlen(program)};
+    parser_t parser{{"5.1"}, program, (uint32_t)strlen(program)};
     auto ast = parser.parse();
     CHECK(ast != nullptr);
     CHECK(ast->is_type(node_type_t::stmt_chunk));
@@ -114,7 +114,7 @@ TEST_CASE("parse.node.local.assignment") {
 TEST_CASE("parse.exception.unexpected.eof") {
     const char *program = "local x; x";
 
-    parser_t parser{{"5.1"}, program, strlen(program)};
+    parser_t parser{{"5.1"}, program, (uint32_t)strlen(program)};
     try {
         auto ast = parser.parse();
     } catch (error::syntax_error &e) {
@@ -123,17 +123,14 @@ TEST_CASE("parse.exception.unexpected.eof") {
 }
 
 TEST_CASE("parser.parse.file") {
-    const cpplua::string_t path{R"(D:\Works\OpenSource\metalua\metalua\grammar\lexer.lua)"};
+    const cpplua::string_t path{R"(./test/textures/lexer.lua)"};
     std::ifstream file{path};
     std::stringstream is;
     is << file.rdbuf();
     string_t program = is.str();
-    parser_t parser{{"5.1"}, program.c_str(), program.size()};
+    parser_t parser{{"5.1"}, program.c_str(), (uint32_t)program.size()};
     try {
         auto ast = parser.parse();
-//        nlohmann::json json;
-//        ast->to_json(json);
-//        std::cout << json << std::endl;
         std::cout << std::numeric_limits<uint32_t>::max() << std::endl;
         tools::walker_t walker{tools::resolve_file(path), ast};
         walker.go();

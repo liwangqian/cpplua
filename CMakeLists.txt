@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.7.2)
 project(cpplua)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -25,6 +25,8 @@ add_executable(cpplua
         test/test_vm.cpp
         test/test_symbol.cpp
         test/test_ast_walker.cpp
-        include/tools/document.h test/test_document.cpp include/utils/lineinfo.h include/utils/noncopyable.h include/utils/position.h)
+        test/test_document.cpp
+        src/utils/lineinfo.cpp
+        test/test_obstack.cpp)
 
 target_link_libraries(cpplua fmt-header-only)

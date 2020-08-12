@@ -11,7 +11,7 @@
 CPPLUA_NS_BEGIN
 namespace tools {
 
-struct type_id_generator {
+struct typeid_generator {
 private:
     static uint32_t next()
     {

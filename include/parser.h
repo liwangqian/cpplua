@@ -24,7 +24,7 @@ using marker_ptr_t = std::shared_ptr<marker_t>;
 
 class parser {
 public:
-    parser(const parser_config_t &config, const char *input, std::size_t len);
+    parser(const parser_config_t &config, const char *input, uint32_t len);
     ~parser() = default;
 
     ast_node_t parse();

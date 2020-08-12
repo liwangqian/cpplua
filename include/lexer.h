@@ -17,10 +17,10 @@ class lexer : public noncopyable_t {
 public:
     ~lexer() = default;
     lexer() = delete;
-    lexer(feature_t features, const char *input, std::size_t len);
+    lexer(feature_t features, const char *input, uint32_t len);
 
     token_t lex();
-    const lineinfo_t &lineinfo() const;
+    const utils::lineinfo_t &lineinfo() const;
 
 private:
     void skip_space();
@@ -50,7 +50,7 @@ private:
     uint32_t m_length;
     uint32_t m_index;
     feature_t m_feature;
-    lineinfo_t m_lineinfo;
+    utils::lineinfo_t m_lineinfo;
 };
 
 inline position_t lexer::curr_position() const

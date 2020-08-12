@@ -35,6 +35,7 @@ enum class symbol_type_t {
 };
 
 struct symbol_t {
+    virtual ~symbol_t() = default;
     symbol_t() = default;
     symbol_t(const name_t *name, env_t *env)
         : name{name}, env{env}

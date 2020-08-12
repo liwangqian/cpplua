@@ -106,6 +106,7 @@ symbol_t *walker_t::walk_node(const ast::node_ptr_t &node)
         default:
             break;
     }
+    return nullptr;
 }
 
 symbol_t *walker_t::parse_chunk(const ast::node_ptr_t &node)

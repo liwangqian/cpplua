@@ -6,7 +6,7 @@ CPPLUA_NS_BEGIN
 namespace __detail {
 using namespace ast;
 
-parser::parser(const parser_config_t &config, const char *input, std::size_t len)
+parser::parser(const parser_config_t &config, const char *input, uint32_t len)
     : m_lexer{make_feature(config.lua_version), input, len}
 {
     // nop
@@ -715,7 +715,7 @@ ast_node_t parser::unexpected(const token_t &tok) const
     const auto &near_ = m_lookahead.value();
     auto pos = m_lexer.lineinfo().to_position(tok.range().start);
     if (tok.type() != Invalid) {
-        const char *type = "";
+        const char *type = nullptr;
         switch (tok.type()) {
             case StringLiteral:
                 type = "string";
@@ -735,8 +735,8 @@ ast_node_t parser::unexpected(const token_t &tok) const
             case BooleanLiteral:
                 type = "boolean";
                 break;
-            case NilLiteral:
-                return raise(error::unexpected{pos, "symbol", "nil", near_});
+            default:
+                return raise(error::unexpected{pos, "symbol", tok.value(), near_});
         }
         return raise(error::unexpected{pos, type, tok.value(), near_});
     }

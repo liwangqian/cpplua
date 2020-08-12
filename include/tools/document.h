@@ -39,7 +39,7 @@ struct document_t {
     func_t *fsym{nullptr};
     std::forward_list<env_t*> envs;
     std::forward_list<symbol_t*> exports;
-    lineinfo_t line_info;
+    utils::lineinfo_t line_info;
     uint64_t last_modified_time{0};
     bool expire{false};
 };

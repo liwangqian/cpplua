@@ -31,7 +31,7 @@ inline bool is_hex_digit(char c)
     return isdigit(c) || (c >= 97 && c <= 102) || (c >= 65 && c <= 70);
 }
 
-lexer::lexer(feature_t features, const char *input, std::size_t len)
+lexer::lexer(feature_t features, const char *input, uint32_t len)
     : m_input{input}, m_length{len}, m_index{0}, m_feature{features}
 {
     new_line(0); // 0是第一行的开始位置
@@ -272,7 +272,7 @@ token_t lexer::scan_numeric_literal()
 
 token_t lexer::scan_vararg_literal()
 {
-    std::size_t token_start = m_index;
+    auto token_start = m_index;
     m_index += 3;
     return { VarargLiteral, "...", { token_start, m_index } };
 }
@@ -371,6 +371,7 @@ string_view_t lexer::read_long_string(bool is_comment)
     } else {
         raise(error::unfinished_long_string{curr_position(), "<eof>"});
     }
+    return {}; // unreachable
 }
 
 bool lexer::expect_n_char(char c, std::size_t n)
@@ -396,7 +397,7 @@ void lexer::new_line(uint32_t offset)
     m_lineinfo.new_line(offset);
 }
 
-const lineinfo_t &lexer::lineinfo() const
+const utils::lineinfo_t &lexer::lineinfo() const
 {
     return m_lineinfo;
 }

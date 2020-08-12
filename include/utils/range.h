@@ -12,8 +12,8 @@ namespace __detail {
 
 template <typename T>
 struct range {
-    T start;
-    T end;
+    T start{};
+    T end{};
 
     inline bool operator==(const range &r) const
     {
